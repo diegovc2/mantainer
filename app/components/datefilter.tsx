@@ -114,6 +114,7 @@ const DateFilter: FC<DateFilterProps> = ({ campaigns, setCampaigns }) => {
   const [filterEndDate, setFilterEndDate] = useState<string | null>(null);
   const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
   const localValues = campaigns;
+  
 
   useEffect(() => {
     console.log('filterStartDate', filterStartDate);
@@ -132,18 +133,18 @@ const DateFilter: FC<DateFilterProps> = ({ campaigns, setCampaigns }) => {
       const filterEndDateTable = dayjs(filterEndDate, 'MM-DD-YYYY');
       if (
         (filterStartDateTable != null || filterEndDateTable == null) &&
-        (startDate.isAfter(filterStartDateTable) )
+        (startDate.isAfter(filterStartDateTable) &&  endDate.isAfter(filterStartDateTable))
       ) {
         newFilteredCampaigns.push(campaign);
       } else if (
         (filterStartDateTable == null || filterEndDateTable != null) &&
-        (endDate.isBefore(filterEndDateTable))
+        (endDate.isBefore(filterEndDateTable) && startDate.isBefore(filterEndDateTable))
       ) {
         newFilteredCampaigns.push(campaign);
       } else if (
         (filterStartDateTable != null || filterEndDateTable != null) &&
-        (startDate.isAfter(filterStartDateTable)) &&
-        (endDate.isBefore(filterEndDateTable) )
+        (startDate.isAfter(filterStartDateTable) && endDate.isAfter(filterStartDate)) &&
+        (endDate.isBefore(filterEndDateTable) && startDate.isBefore(filterEndDateTable) )
       ) {
         newFilteredCampaigns.push(campaign);
       }
