@@ -44,12 +44,14 @@ const Maintainer: FC = () => {
     { field: 'budget', headerName: 'Budget', flex: 1 },
   ];
 
-  
+  if (typeof window !== "undefined") {
+
   window.addCampaigns = (newCampaigns: Campaign[]) => {
     setCampaigns((prevCampaigns) => [...prevCampaigns, ...newCampaigns]);
     setlocalCampaigns((prevCampaigns) => [...prevCampaigns, ...newCampaigns]);
 
   };
+}
 
 
 
@@ -73,8 +75,10 @@ const Maintainer: FC = () => {
       //add it to the campaigns array
     });
     //set the campaigns state to the localCampaigns array
-    window.addCampaigns(localCampaigns);
+    if (typeof window !== "undefined") {
 
+    window.addCampaigns(localCampaigns);
+    }
     //delay loader so it can be shown
     setTimeout(() => {
       setIsLoading(false);
