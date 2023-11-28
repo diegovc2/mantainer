@@ -23,8 +23,6 @@ const DateFilter: FC<DateFilterProps> = ({ localValues ,campaigns, setCampaigns 
   
 
   useEffect(() => {
-    console.log('filterStartDate', filterStartDate);
-    console.log('filterEndDate', filterEndDate);
   }, [filterStartDate, filterEndDate]);
 
   const handleFilter = () => {
@@ -49,7 +47,6 @@ const DateFilter: FC<DateFilterProps> = ({ localValues ,campaigns, setCampaigns 
       }
     });
 
-    console.log('filteredCampaigns', filteredCampaigns);
     setCampaigns(filteredCampaigns);
   };
 
@@ -57,7 +54,6 @@ const DateFilter: FC<DateFilterProps> = ({ localValues ,campaigns, setCampaigns 
     setFilterStartDate(null);
     setFilterEndDate(null);
     setSearchTerm('');
-    console.log('localValues', localValues);
     setCampaigns(localValues);
   };
 

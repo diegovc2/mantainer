@@ -3,7 +3,7 @@
 import { FC, useState, useEffect } from 'react';
 import { Campaign } from './interfaces/campaign';
 import campaignData from './components/campaign-list';
-import { DataGrid, GridColDef, GridRowsProp, GridCellParams} from '@mui/x-data-grid';
+import { DataGrid, GridToolbar, GridColDef, GridRowsProp, GridCellParams} from '@mui/x-data-grid';
 import { LocalizationProvider,  } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import {Grid, Paper } from '@mui/material';
@@ -49,7 +49,6 @@ const Maintainer: FC = () => {
     setCampaigns((prevCampaigns) => [...prevCampaigns, ...newCampaigns]);
     setlocalCampaigns((prevCampaigns) => [...prevCampaigns, ...newCampaigns]);
 
-    console.log('campaigns', campaigns);
   };
 
 
@@ -83,7 +82,6 @@ const Maintainer: FC = () => {
 
   }, []);
 
-  console.log('localCampaigns', localCampaigns);  
 
 
 
@@ -92,13 +90,15 @@ const Maintainer: FC = () => {
     <Grid container spacing={3}>
       <Grid item xs={12}>
         <Paper elevation={3}>
+          <h1>Campaign Maintainer</h1>
           <DateFilter localValues={localCampaigns}  campaigns={campaigns} setCampaigns={setCampaigns} />
         </Paper>
       </Grid>
       <Grid item xs={12}>
       <DataGrid
       rows={campaigns}
-      
+      slots={{ toolbar: GridToolbar }}
+
       columns={columns.map((column) => ({
         ...column,
         cellClassName: (params: GridCellParams) =>
