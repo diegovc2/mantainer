@@ -3,17 +3,24 @@
 import { FC, useState, useEffect } from 'react';
 import { Campaign } from './interfaces/campaign';
 import campaignData from './components/campaign-list';
-import { DataGrid, GridToolbar, GridColDef, GridRowsProp } from '@mui/x-data-grid';
-import { Card, Grid } from '@mui/material';
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { DataGrid, GridColDef, GridRowsProp, GridCellParams} from '@mui/x-data-grid';
+import { LocalizationProvider,  } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { Button, TextField } from '@mui/material';
-
-
+import {Grid, Paper } from '@mui/material';
 import dayjs from 'dayjs';
+import './page.css';
+
+
+//Custom Imports
 import DateFilter from './components/datefilter';
+import CampaignDataGrid from './components/table';
 
-
+//Extending the window object to add a new function
+declare global {
+  interface Window {
+    addCampaigns: (newCampaigns: Campaign[]) => void;
+  }
+}
 
 
 
@@ -21,18 +28,11 @@ import DateFilter from './components/datefilter';
 const Maintainer: FC = () => {
   var utc = require('dayjs/plugin/utc')
   dayjs.extend(utc)
-  const [pageSize, setPageSize] = useState<number>(5);
+  const [isLoading, setIsLoading] = useState(true);
   const [campaigns, setCampaigns] = useState<Array<Campaign>>([]);
-  const [filterStartDate, setFilterStartDate] = useState<string | null>(null);
-  const [filterEndDate, setFilterEndDate] = useState<string | null>(null);
-
-  //mockup original value
-  var localCampaigns: Array<Campaign> = []
-
-
+  const [localCampaigns, setlocalCampaigns] = useState<Array<Campaign>>([]);
   var customParseFormat = require('dayjs/plugin/customParseFormat')
   dayjs.extend(customParseFormat)
-
 
 
   const columns: GridColDef[] = [
@@ -44,10 +44,20 @@ const Maintainer: FC = () => {
     { field: 'budget', headerName: 'Budget', flex: 1 },
   ];
 
+  
+  window.addCampaigns = (newCampaigns: Campaign[]) => {
+    setCampaigns((prevCampaigns) => [...prevCampaigns, ...newCampaigns]);
+    setlocalCampaigns((prevCampaigns) => [...prevCampaigns, ...newCampaigns]);
+
+    console.log('campaigns', campaigns);
+  };
+
+
 
   useEffect(() => {
 
     //Go through the campaignData and create a new campaign object for each campaign
+    const localCampaigns: Campaign[] = []; 
     campaignData.map((campaign) => {
       const campaignObj: Campaign = {
         id: campaign.id,
@@ -57,35 +67,47 @@ const Maintainer: FC = () => {
         active: campaign.active,
         budget: campaign.budget,
       };
+      //if campaign startdate is before enddate add to the localCampaigns array
+      if(dayjs(campaignObj.startDate, "YYYY-MM-DD").isBefore(dayjs(campaignObj.endDate, "YYYY-MM-DD"))){
+        localCampaigns.push(campaignObj);
+      }
       //add it to the campaigns array
-      localCampaigns.push(campaignObj);
     });
     //set the campaigns state to the localCampaigns array
-    setCampaigns([...localCampaigns]);
+    window.addCampaigns(localCampaigns);
 
-
+    //delay loader so it can be shown
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000); // delay of 1 second
 
   }, []);
+
+  console.log('localCampaigns', localCampaigns);  
 
 
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <Grid container spacing={3}>
+      <Grid item xs={12}>
+        <Paper elevation={3}>
+          <DateFilter localValues={localCampaigns}  campaigns={campaigns} setCampaigns={setCampaigns} />
+        </Paper>
+      </Grid>
+      <Grid item xs={12}>
+      <DataGrid
+      rows={campaigns}
       
-      
-        <DateFilter campaigns={campaigns} setCampaigns={setCampaigns} />
-
-        <Card>
-          <DataGrid rows={campaigns} slots={{
-            toolbar: GridToolbar,
-          }}
-            columns={columns}
-
-          />
-
-        </Card>
-     
-    </LocalizationProvider >
+      columns={columns.map((column) => ({
+        ...column,
+        cellClassName: (params: GridCellParams) =>
+          params.row.active ? 'active-row' : 'inactive-row',
+      }))}
+      />
+      </Grid>
+    </Grid>
+  </LocalizationProvider>
   );
  };
 
