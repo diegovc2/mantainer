@@ -82,7 +82,7 @@ const Maintainer: FC = () => {
     //delay loader so it can be shown
     setTimeout(() => {
       setIsLoading(false);
-    }, 1000); // delay of 1 second
+    }, 2000); // delay of 1 second
 
   }, []);
 
