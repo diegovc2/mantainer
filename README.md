@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
 
-First, run the development server:
+## Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This project is a campaign maintainer application built with React and TypeScript. It uses Material-UI's DataGrid for displaying campaign data and provides a date filter for filtering campaigns based on their start and end dates.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The final result can be seen in here https://campaign-mantainer.vercel.app/
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Main Component: Maintainer
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+The `Maintainer` component is the main component of the application. It manages the state of the campaigns and renders the `DataGrid` and `DateFilter` components.
 
-## Learn More
+### Installation and Usage
 
-To learn more about Next.js, take a look at the following resources:
+Follow these steps to install and run the project:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Clone the repository**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   Use the following command to clone the repository:
 
-## Deploy on Vercel
+   ```bash
+   git clone https://github.com/diegovc2/mantainer.git
+    ```
+    Replace `username` and `repository` with the actual username and repository name.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+    2. **Navigate to the project directory**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+    Use the following command to navigate to the project directory:
+
+    ```bash
+    cd mantainer
+    ```
+
+    3. **Install the dependencies**
+
+    Use the following command to install the project dependencies:
+
+    ```bash
+    npm install
+    ```
+    4. **Start the project**
+
+    Use the following command to start the project:
+
+    ```bash
+    npm start
+    ```
+    The project will start, and you can access it at `http://localhost:3000`.
+
+    5. **Usage**
+
+    Try mixing the filters from start, end Date and search getRandomValues.
+
+### State
+
+The `Maintainer` component maintains the following state variables:
+
+- `isLoading`: A boolean indicating whether the campaign data is still loading.
+- `campaigns`: An array of `Campaign` objects representing the current list of campaigns.
+- `localCampaigns`: An array of `Campaign` objects representing the original list of campaigns.
+
+### Methods
+
+The `Maintainer` component defines the following methods:
+
+- `window.addCampaigns`: A method added to the `window` object for adding new campaigns to the `campaigns` and `localCampaigns` state variables.
+
+### Effects
+
+The `Maintainer` component uses the `useEffect` hook to initialize the `campaigns` and `localCampaigns` state variables with data from `campaignData`.
+
+### Render
+
+The `Maintainer` component renders a `LocalizationProvider` component that wraps a `Grid` container. The `Grid` container contains two items:
+
+- A `Paper` component that contains a title and the `DateFilter` component.
+- A `DataGrid` component that displays the campaign data.
+
+## Custom Imports
+
+- `DateFilter`: A component for filtering campaigns based on their start and end dates.
+- `CampaignDataGrid`: A component for displaying campaign data in a `DataGrid`.
+
+## Styles
+
+The styles for the `Maintainer` component are defined in the `page.css` file.
+
+## Interfaces
+
+- `Campaign`: An interface representing a campaign. It includes the following properties: `id`, `name`, `startDate`, `endDate`, `active`, and `budget`.
+
+## Global Declarations
+
+The `window` object is extended with a new method `addCampaigns` for adding new campaigns to the `campaigns` and `localCampaigns` state variables.
+
+## Dependencies
+
+- `dayjs`: A lightweight JavaScript date library for parsing, validating, manipulating, and formatting dates.
+- `@mui/x-data-grid`: A fast and flexible data grid component from Material-UI.
+- `@mui/material`: A set of React components that implement Google's Material Design.
+- `@mui/x-date-pickers`: A set of date picker components from Material-UI.
+- `@mui/x-date-pickers/AdapterDayjs`: An adapter for using `dayjs` with Material-UI's date picker components.
